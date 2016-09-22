@@ -1,5 +1,7 @@
 <?php
-
+	
+	require("../../config.php");
+	echo $serverPassword;
 	//var_dump($_GET);
 	
 	//echo "<br>";
@@ -109,7 +111,48 @@ $genderError = " "
 	
 ?>
 
+<?php
+	if( $signupEmailerror == "*" &&
+		$signupPassworderror == "*" &&
+		$ratingEmailerror == "*" &&
+		$questEmailerror == "*" &&
+		isset($_POST["signupEmail"]) &&
+		isset($_POST["signupPassword"])
+	){
+		echo "Salvestan <br>";
+		echo "Email: ".$signupEmail."<br>";
+		echo "Parool: ".$_POST["signupPassword"]."<br>";
+		
+		$password = hash("sha512", $_POST["signupPassword"]);
+		echo $password;
+		
+		//connection to server
+		$database = "if16_krisveen";
+		
+		$mysqli = new mysqli($serverHost, $serverUsername, $serverPassword, $database);
+		
+		$stmt = $mysqli->prepare("
+		
+		INSERT INTO user_sample (email, password) VALUE (?, ?)
+		
+		");
+		
+		$stmt->bind_param("ss", $signupEmail, $password);
+		
+		if ($stmt->execute()){
+			echo "Success";
+		} else {
+			echo "ERROR" .$stmt->error;	
+		}
+		//asendan questionmarkid s-string, i-int d-double
+		
+		
+	}
+	
 
+
+
+?>
 
 
 
